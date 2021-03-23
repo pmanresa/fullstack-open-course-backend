@@ -39,16 +39,8 @@ app.get("/api/persons", (req, res) => {
   });
 });
 
-app.post("/api/persons", (req, res) => {
+app.post("/api/persons", (req, res, next) => {
   const body = req.body;
-
-  // const nameExists = Person.find({ name: body.name });
-
-  // if (nameExists) {
-  //   return res.status(400).json({
-  //     error: `name ${body.name} already exists`,
-  //   });
-  // }
 
   const person = new Person({
     name: body.name,
@@ -77,11 +69,13 @@ app.get("/api/persons/:id", (req, res, next) => {
 
 app.delete("/api/persons/:id", (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
-    .then((result) => {
+    .then(() => {
       res.status(204).end();
     })
     .catch((error) => next(error));
 });
+
+const opts = { runValidators: true };
 
 app.put("/api/persons/:id", (req, res, next) => {
   const body = req.body;
@@ -90,7 +84,7 @@ app.put("/api/persons/:id", (req, res, next) => {
     number: body.number,
   };
 
-  Person.findByIdAndUpdate(req.params.id, person, { new: true })
+  Person.findByIdAndUpdate(req.params.id, person, { ...opts, new: true })
     .then((updatedPerson) => {
       res.json(updatedPerson);
     })

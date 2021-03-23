@@ -37,7 +37,7 @@ if (newPersonName && newPersonNumber) {
     number: newPersonNumber,
   });
 
-  person.save().then((response) => {
+  person.save().then(() => {
     console.log(
       `Added ${newPersonName} with number ${newPersonNumber} to phonebook-app database.`
     );
